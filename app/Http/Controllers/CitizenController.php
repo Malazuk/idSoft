@@ -234,4 +234,9 @@ public function update(Request $request, $id)
         'success' => 'Citizen updated successfully.',
     ]);
 }
+public function all()
+{
+    $citizens = \App\Models\Citizen::all();
+    return view('citizen_all', compact('citizens'));
+}
 }

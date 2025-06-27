@@ -1,13 +1,6 @@
 {{-- filepath: c:\Users\casma\idSoft\resources\views\citizen_search_results.blade.php --}}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
+
+<x-app-layout>
     <div class="container mx-auto mt-10 max-w-4xl bg-white shadow-md rounded-lg p-6">
         @if(session('success'))
             <div class="bg-green-500 text-white p-4 rounded mb-4">
@@ -70,5 +63,4 @@
             </table>
         @endif
     </div>
-</body>
-</html>
+</x-app-layout>
