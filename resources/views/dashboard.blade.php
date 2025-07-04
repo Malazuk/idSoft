@@ -5,57 +5,122 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Stats Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded shadow text-center">
-                    <div class="text-2xl font-bold">{{ $totalCitizens }}</div>
-                    <div class="text-gray-500">Total Citizens</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <div class="bg-blue-500 text-white rounded-lg shadow p-6 flex flex-col items-center">
+                    <div class="text-3xl font-bold">{{ $totalCitizens }}</div>
+                    <div class="mt-2 text-lg">Total Citizens Registered</div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded shadow text-center">
-                    <div class="text-2xl font-bold">{{ $newThisMonth }}</div>
-                    <div class="text-gray-500">New This Month</div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded shadow text-center">
-                    <div class="text-2xl font-bold">{{ $admins }}</div>
-                    <div class="text-gray-500">Admins</div>
+                <div class="bg-green-500 text-white rounded-lg shadow p-6 flex flex-col items-center">
+                    <div class="text-3xl font-bold">{{ $newThisMonth }}</div>
+                    <div class="mt-2 text-lg">Registered This Month</div>
                 </div>
             </div>
-            {{-- Chart --}}
-            <div class="bg-white dark:bg-gray-800 p-6 rounded shadow mb-8">
-                <h3 class="text-lg font-semibold mb-4">Citizens Registered Per Month</h3>
-                <div class="relative w-full" style="height:300px;">
-                    <canvas id="citizensChart"></canvas>
+            {{-- Charts --}}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+                <div class="flex flex-wrap gap-8 justify-center">
+                    {{-- Bar Chart --}}
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 text-center">Citizens per Hometown</h3>
+                        <canvas id="barChart" width="400" height="300"></canvas>
+                    </div>
+                    {{-- Pie Chart --}}
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 text-center">Gender Distribution</h3>
+                        <canvas id="genderPieChart" width="300" height="300"></canvas>
+                        <div class="mt-2 text-sm text-center">
+                            <span class="mr-4">Male: {{ $maleCount }}</span>
+                            <span class="mr-4">Female: {{ $femaleCount }}</span>
+                            <span>Other: {{ $otherCount }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-lg font-semibold mb-2 text-center">Monthly Registrations by Gender</h3>
+                    <canvas id="dualBarChart" width="600" height="300"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    {{-- Chart.js CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('citizensChart').getContext('2d');
-        new Chart(ctx, {
+        // Bar Chart Data (example: citizens per hometown)
+        const barLabels = {!! json_encode($hometownLabels) !!};
+        const barData = {!! json_encode($hometownCounts) !!};
+
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
             type: 'bar',
             data: {
-                labels: {!! json_encode($months) !!},
+                labels: barLabels,
                 datasets: [{
-                    label: 'Registrations',
-                    data: {!! json_encode($registrations) !!},
-                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 1
+                    label: 'Number of Citizens',
+                    data: barData,
+                    backgroundColor: '#36A2EB',
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: false,
+                plugins: {
+                    legend: { display: false }
+                },
                 scales: {
-                    y: { beginAtZero: true }
+                    x: { title: { display: true, text: 'Hometown' } },
+                    y: { title: { display: true, text: 'Citizens' }, beginAtZero: true }
                 }
             }
         });
-    });
+
+        // Pie Chart Data (gender distribution)
+        const genderPieCtx = document.getElementById('genderPieChart').getContext('2d');
+        new Chart(genderPieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Male', 'Female', 'Other'],
+                datasets: [{
+                    data: [{{ $maleCount }}, {{ $femaleCount }}, {{ $otherCount }}],
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Dual Bar Chart: Monthly Registrations by Gender
+        const dualBarCtx = document.getElementById('dualBarChart').getContext('2d');
+        new Chart(dualBarCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($months) !!},
+                datasets: [
+                    {
+                        label: 'Male',
+                        data: {!! json_encode($maleRegistrations) !!},
+                        backgroundColor: '#36A2EB'
+                    },
+                    {
+                        label: 'Female',
+                        data: {!! json_encode($femaleRegistrations) !!},
+                        backgroundColor: '#FF6384'
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { title: { display: true, text: 'Month' }, stacked: false },
+                    y: { title: { display: true, text: 'Registrations' }, beginAtZero: true, stacked: false }
+                }
+            }
+        });
     </script>
 </x-app-layout>

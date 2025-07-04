@@ -47,6 +47,22 @@
                 <input type="text" name="contact_info" id="contact_info" value="{{ $citizen->contact_info }}" 
                        class="border rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
+            {{-- Gender --}}
+            <div class="mb-4">
+                <label for="gender" class="block text-gray-700">Gender</label>
+                <select name="gender" id="gender" class="mt-1 block w-full border-gray-300 rounded">
+                    <option value="">Select Gender</option>
+                    <option value="Male" {{ old('gender', $citizen->gender) == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ old('gender', $citizen->gender) == 'Female' ? 'selected' : '' }}>Female</option>
+                    <option value="Other" {{ old('gender', $citizen->gender) == 'Other' ? 'selected' : '' }}>Other</option>
+                </select>
+            </div>
+
+            {{-- NIN --}}
+            <div class="mb-4">
+                <label for="nin" class="block text-gray-700">National Identification Number (NIN)</label>
+                <input type="text" name="nin" id="nin" value="{{ old('nin', $citizen->nin) }}" class="mt-1 block w-full border-gray-300 rounded" required>
+            </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Update</button>
         </form>
     </div>

@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Citizen extends Model
 {
+    use HasFactory;
     // protected $table = 'citizen'; // Explicitly use the singular table name
     protected $fillable = [
         'citizen_id', 'first_name', 'surname', 'other_names', 'hometown', 
-        'date_of_birth', 'address', 'contact_info', 'photo_path'
+        'date_of_birth', 'address', 'contact_info', 'photo_path',
+        'gender',   // Add this
+        'nin',      // Add this
     ];
 
     protected static function boot()

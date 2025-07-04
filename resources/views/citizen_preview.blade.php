@@ -45,6 +45,16 @@
                 <img src="{{ asset('storage/' . $photoPath) }}" alt="Uploaded Photo" class="w-32 h-32 rounded border">
                 <input type="hidden" name="photo_path" value="{{ $photoPath }}">
             </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Gender:</label>
+                <p class="text-gray-800">{{ $data['gender'] }}</p>
+                <input type="hidden" name="gender" value="{{ $data['gender'] }}">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">NIN:</label>
+                <p class="text-gray-800">{{ $data['nin'] }}</p>
+                <input type="hidden" name="nin" value="{{ $data['nin'] }}">
+            </div>
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Submit</button>
         </form>
     </div>

@@ -32,6 +32,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/citizen/{id}', [CitizenController::class, 'update'])->name('citizen.update');
     Route::get('/citizens', [CitizenController::class, 'all'])->name('citizen.all');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/citizens/export/excel', [CitizenController::class, 'exportExcel'])->name('citizens.export.excel');
+    Route::get('/citizens/export/pdf', [CitizenController::class, 'exportPdf'])->name('citizens.export.pdf');
 });
 
 
